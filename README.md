@@ -26,7 +26,7 @@ The script performs the following tasks:
 ex.
 
 ```powershell
-zip-cxsrc-folder.ps1 -path 'C:\CxSRC' -keep 2 -project 1002
+zip-cxsrc-scans.ps1 -path 'C:\CxSRC' -keep 2 -project 1002
 ```
 
 ## undo-zip-cxsrc-scans.ps1
@@ -47,5 +47,5 @@ The script performs the following tasks:
 ex.
 
 ```powershell
-undo-zip-cxsrc-folder.ps1 -path 'C:\CxSRC'
+undo-zip-cxsrc-scans.ps1 -path 'C:\CxSRC'
 ```
