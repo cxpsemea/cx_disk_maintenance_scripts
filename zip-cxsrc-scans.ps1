@@ -1,5 +1,5 @@
 Param([string]$path, [int]$keep = 50, [int]$project, [bool]$keepSourceFolder = $false)
-
+Add-Type -assembly "system.io.compression.filesystem"
 function Log($message, $type) {
   $logFile = "$path\compression.log"
   $timeStamp = "[{0:MM/dd/yy} {0:HH:mm:ss:ms}]" -f (Get-Date) 
@@ -17,18 +17,20 @@ function Log($message, $type) {
 }
 
 function ZipFile($source, $destination) {
-  Log("Compressing $source")
- 
   If (Test-path $destination) { 
     Remove-item $destination 
   }
-  
-  Add-Type -assembly "system.io.compression.filesystem"
+
+  Log("Compressing $source")
+  $zipSw = [Diagnostics.Stopwatch]::StartNew()
   [io.compression.zipfile]::CreateFromDirectory($source, $destination)
+  $zipSw.Stop()
+
+  Log("Compressed in $($zipSw.Elapsed.TotalSeconds) sec")
 }
 
 function Main {
-  $sw = [Diagnostics.Stopwatch]::StartNew()
+  $mainSw = [Diagnostics.Stopwatch]::StartNew()
   Log("Sast scans compression start on $path")
   $wildcard = If ($project) { [string]::Format('{0}_*', $project) } Else { '*' }
   $numberOfScansIgnoredByProject = @{}
@@ -40,29 +42,35 @@ function Main {
     $project = $scan[0].BaseName.Split('_')[0]
     $totalIgnored = $numberOfScansIgnoredByProject[$project]
     $sourceFolder = $scan.FullName
-    $zipFileDestination = "$sourceFolder\content.zip"
+    $zipFileDestination = "$sourceFolder\$($scan.Name).zip"
 
     If ($totalIgnored -lt $keep) {
       $numberOfScansIgnoredByProject[$project] ++
     }
     ElseIf (!(Test-path  $zipFileDestination)) {
-      $destinationZipFile = "$($sourceFolder)-temp.zip"
-      ZipFile $sourceFolder $destinationZipFile
+      $tempZipLocation = "$($scan.Name)-temp.zip"
+      ZipFile $sourceFolder $tempZipLocation
 
       if ($keepSourceFolder -ne $true) {
         Log("Deleting the source folder content")
         Remove-Item "$sourceFolder\*" -Recurse -Force
       }
 
-      Log("Moving the zipped content to $zipFileDestination")
-      Move-Item -Path $destinationZipFile -Destination $zipFileDestination
+      Log("Moving the zipped content to the source folder")
+      Move-Item -Path $tempZipLocation -Destination $zipFileDestination
 
       $totalCompressedFolders ++
     }
   }
   
-  $sw.Stop()
-  Log("Finished compressing $totalCompressedFolders folder(s) in $($sw.Elapsed.TotalSeconds) sec")
+  $mainSw.Stop()
+
+  If (  $totalCompressedFolders -eq 0) {
+    Log("There isn't any new scan to compress")
+  }
+  Else {
+    Log("Finished compressing $totalCompressedFolders folder(s) in $($mainSw.Elapsed.TotalSeconds) sec")
+  }
 }
 
 try {

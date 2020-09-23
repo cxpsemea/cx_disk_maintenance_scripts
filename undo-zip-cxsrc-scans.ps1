@@ -5,7 +5,7 @@ function Main {
   
   foreach ($scan in $allScans) {
     $scanSourceFolder = $scan.FullName
-    $zipFilePath = "$scanSourceFolder\content.zip"
+    $zipFilePath = "$scanSourceFolder\$($scan.Name).zip"
    
     If (Test-path $zipFilePath) {
       Expand-Archive -LiteralPath $zipFilePath -DestinationPath $scanSourceFolder
