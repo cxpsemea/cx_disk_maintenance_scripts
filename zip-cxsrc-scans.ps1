@@ -48,7 +48,7 @@ function Main {
       $numberOfScansIgnoredByProject[$project] ++
     }
     ElseIf (!(Test-path  $zipFileDestination)) {
-      $tempZipLocation = "$($scan.Name)-temp.zip"
+      $tempZipLocation = "$path\$($scan.Name)-temp.zip"
       ZipFile $sourceFolder $tempZipLocation
 
       if ($keepSourceFolder -ne $true) {
