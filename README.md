@@ -1,5 +1,7 @@
 # Cx Disk Maintenance Scrips
 
+
+
 ## zip-cxsrc-scans.ps1
 
 Zips the Sast scans source code folders that are inside the `CxSrc` folder.
@@ -29,6 +31,8 @@ ex.
 zip-cxsrc-scans.ps1 -path 'C:\CxSRC' -keep 2 -project 1002
 ```
 
+
+
 ## undo-zip-cxsrc-scans.ps1
 
 Reverts the `zip-cxsrc-folder.ps1` script action.
@@ -49,3 +53,10 @@ ex.
 ```powershell
 undo-zip-cxsrc-scans.ps1 -path 'C:\CxSRC'
 ```
+
+
+## TODO
+
+- [ ] Create a new log file with the date instead of appending on the same.
+- [ ] Add more verbose output to the user (with deletion details showing some action).
+- [ ] Add a time frame when the script can run as arguments (an end hour at least) in order to make this script schedulable. 
