@@ -53,8 +53,3 @@ ex.
 ```powershell
 undo-zip-cxsrc-scans.ps1 -path 'C:\CxSRC'
 ```
-
-
-## TODO
-
-- [ ] Add more verbose output to the user (with deletion details showing some action).
