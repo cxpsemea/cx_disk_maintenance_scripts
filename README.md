@@ -57,6 +57,4 @@ undo-zip-cxsrc-scans.ps1 -path 'C:\CxSRC'
 
 ## TODO
 
-- [ ] Create a new log file with the date instead of appending on the same.
 - [ ] Add more verbose output to the user (with deletion details showing some action).
-- [ ] Add a time frame when the script can run as arguments (an end hour at least) in order to make this script schedulable. 

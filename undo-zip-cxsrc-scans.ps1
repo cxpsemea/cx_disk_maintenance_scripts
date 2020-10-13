@@ -16,7 +16,7 @@ function Main {
 }
 
 try {
-  If (!(Test-path $path)) {
+  If (!(Test-path $path)) {a
     throw "The specified path $path doesn't exist."
   }
 
